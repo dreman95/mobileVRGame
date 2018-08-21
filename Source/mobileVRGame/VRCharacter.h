@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Projectile.h"
 #include "VRCharacter.generated.h"
+
+
+//forward declarations
+class AProjectile;
+
 
 UCLASS()
 class MOBILEVRGAME_API AVRCharacter : public ACharacter
@@ -29,10 +35,28 @@ private:
 	void MoveRight(float throttle);
 	void MoveForward(float throttle);
 
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	void Fire();
+
+
 private:
 	//store a reference to the camera
 	class UCameraComponent* camera;
 	class USceneComponent* VRRoot;
-	
-	
+	float LaunchSpeed = 4000;
+
+	///** Projectile class to spawn */
+	//UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	//TSubclassOf<AProjectile> ProjectileClass;
+
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* SpawnComp;
+
+	/*=======================================================================================================
+										Projectile code from template
+	=========================================================================================================*/
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
+
 };
