@@ -16,8 +16,8 @@ AVRCharacter::AVRCharacter()
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(GetRootComponent());
 
-	SpawnComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
-	SpawnComp->SetupAttachment(GetRootComponent());
+	SpawnComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpawnLocComponent"));
+	SpawnComp->SetupAttachment(camera);
 }
 
 // Called when the game starts or when spawned
@@ -72,7 +72,7 @@ void AVRCharacter::Fire()
 	OurLoc = camera->GetComponentLocation();
 	
 	//Spawn our object
-	AProjectile* Lazer = GetWorld()->SpawnActor<AProjectile>(Projectile, OurLoc, camera->GetComponentRotation(), SpawnParams);
+	AProjectile* Lazer = GetWorld()->SpawnActor<AProjectile>(Projectile, SpawnComp->GetSocketLocation(FName("ProjectileSocket")), SpawnComp->GetSocketRotation(FName("ProjectileSocket")), SpawnParams);
 
 	}
 
