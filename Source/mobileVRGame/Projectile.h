@@ -33,9 +33,13 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent * ProjectileObject;
 
-	/** Sphere collision component */
-	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
-	class USphereComponent* CollisionComp;
+public:
+	USceneComponent * RootComp;
+
+	UPROPERTY(EditAnywhere)
+	FVector Velocity = FVector(100.f);
+
+	float BulletExpiry = 0;
 
 	
 	

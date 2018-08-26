@@ -1,10 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VRCharacter.h"
-#include "Projectile.h"
 #include <Camera/CameraComponent.h>
 #include <GameFramework/Actor.h>
-#include <Engine/World.h>
 #include <Components/StaticMeshComponent.h>
 
 
@@ -18,11 +16,16 @@ AVRCharacter::AVRCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CurrentTime = 0.f;
+	xCord = 0.f;
+
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(GetRootComponent());
 
 	SpawnComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	SpawnComp->SetupAttachment(GetRootComponent());
+
+	
 	
 	
 
@@ -40,6 +43,9 @@ void AVRCharacter::BeginPlay()
 void AVRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//keep track of our current time 
+	CurrentTime = CurrentTime + 1 * DeltaTime;
 
 }
 
@@ -67,35 +73,24 @@ void AVRCharacter::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firing!!!!"));
 
-	////spawn projectile at the location of the character
-	//const FRotator SpawnRotation = camera->GetComponentRotation();
-	//const FVector SpawnLocation = camera->GetComponentLocation();
 
-	//auto Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), SpawnLocation, SpawnRotation);
-	//
+	
 
-	//Projectile->LaunchProjectile(LaunchSpeed);
+	//create spawn params;
+	FActorSpawnParameters SpawnParams;
 
-	UWorld* const World = GetWorld();
-	World->SpawnActor<AProjectile>(ProjectileClass, SpawnComp->GetSocketLocation(FName("ProjectileSocket")), SpawnComp->GetSocketRotation(FName("ProjectileSocket")));
+	//Who does the spawning: we are saying this class does the spawning.
+	SpawnParams.Owner = this;
 
+	//Who can do damage to this object: set to default.
+	SpawnParams.Instigator = Instigator;
+	OurLoc = camera->GetComponentLocation();
+	
+	//Spawn our object
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ourSpawningObject, OurLoc, camera->GetComponentRotation(), SpawnParams);
+	
+	FVector NewVelocity = GetActorForwardVector() * 5000.f;
+	Projectile->Velocity = FVector();
 
-	if (ProjectileClass != NULL)
-	{
-		UWorld* const World = GetWorld();
-		if (World != NULL)
-		{
-
-			const FRotator SpawnRotation = GetControlRotation();
-			const FVector SpawnLocation = camera->GetComponentLocation();
-
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			// spawn the projectile at the muzzle
-			World->SpawnActor<AProjectile>(ProjectileClass, SpawnComp->GetSocketLocation(FName("ProjectileSocket")), SpawnComp->GetSocketRotation(FName("ProjectileSocket")));
-		}
 	}
-}
 

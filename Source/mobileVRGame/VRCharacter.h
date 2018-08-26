@@ -8,10 +8,6 @@
 #include "VRCharacter.generated.h"
 
 
-//forward declarations
-class AProjectile;
-
-
 UCLASS()
 class MOBILEVRGAME_API AVRCharacter : public ACharacter
 {
@@ -52,11 +48,15 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* SpawnComp;
 
-	/*=======================================================================================================
-										Projectile code from template
-	=========================================================================================================*/
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AProjectile> ProjectileClass;
+	float CurrentTime;                              //Keeps current alive time 
+	float xCord;                                    //Holds the new x cordinate 
+
+	FVector OurLoc;                                 //Holds our spawn location
+	FRotator ourRotation;                           //Holds the rotation of the object 
+	
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Our spawning object")
+	TSubclassOf<AProjectile> ourSpawningObject;	//Holds the blueprint of the object we want to spawn 		
+
 
 };
