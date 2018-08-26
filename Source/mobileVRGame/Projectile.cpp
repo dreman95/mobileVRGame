@@ -15,25 +15,35 @@ AProjectile::AProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ProjectileObject = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile"));
-	ProjectileObject->SetupAttachment(GetRootComponent());
-
-	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
-	RootComponent = RootComp;
-
+	/*==============================================================================================================
+														Template Code
+	================================================================================================================*/
 	// Use a sphere as a simple collision representation
-	/*CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");*/
+	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+	//CollisionComp->OnComponentHit.AddDynamic(this, &AVRProjectileShootingProjectile::OnHit); // set up a notification for when this component hits something blocking
+
+	// Players can't walk on it
+	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
+	CollisionComp->CanCharacterStepUpOn = ECB_No;
 
 	// Set as root component
-	//RootComponent = CollisionComp;
+	RootComponent = CollisionComp;
 
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
-	ProjectileMovement->bAutoActivate = false;
-	//ProjectileMovement->setupdatedcomponent(collisioncomp);
+	// Use a ProjectileMovementComponent to govern this projectile's movement
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
+	ProjectileMovement->SetUpdatedComponent(CollisionComp);
+	ProjectileMovement->InitialSpeed = 3000.f;
+	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->bRotationFollowsVelocity = true;
+	ProjectileMovement->bShouldBounce = true;
 
+	// Die after 3 seconds by default
+	//InitialLifeSpan = 3.0f;
 
+	/*==============================================================================================================
+	================================================================================================================*/
 
 }
 
@@ -49,50 +59,6 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FHitResult HitResult;
-	FVector StartTrace = this->GetActorLocation();
-	FVector EndTrace = (Velocity * DeltaTime) + StartTrace;
-	EndTrace.Z += this->GetActorRotation().Pitch;
-	FCollisionQueryParams collisionParams;
-	collisionParams.AddIgnoredActor(this);
-
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Destructible, collisionParams)) {
-
-		//whenever we hit a wall it draws a box on the screen
-		if (HitResult.GetActor()) {
-			DrawDebugSolidBox(GetWorld(), HitResult.ImpactPoint, FVector(10.f), FColor::Blue, true);
-			
-			 
-		}else {
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Could not get mesh, type is: %s"), *HitResult.GetActor()->StaticClass()->GetFName().ToString()));
-		}
-
-		Destroy();
-
-	}
-	else {
-		BulletExpiry += DeltaTime;
-
-		DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(0.f, -BulletExpiry * 80.f, 100.f), true);
-
-		SetActorLocation(EndTrace);
-
-		Velocity += FVector(0.f, 0.f, -200);
-	}
-	if (BulletExpiry > 3) {
-		Destroy();
-	}
-	
-
 }
 
-void AProjectile::LaunchProjectile(float speed)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Projectile Firing "));
-	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * speed);
-	ProjectileMovement->Activate();
-	
-	
-	
-}
 

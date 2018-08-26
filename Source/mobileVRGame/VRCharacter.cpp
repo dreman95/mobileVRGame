@@ -5,11 +5,6 @@
 #include <GameFramework/Actor.h>
 #include <Components/StaticMeshComponent.h>
 
-
-
-
-
-
 // Sets default values
 AVRCharacter::AVRCharacter()
 {
@@ -17,19 +12,12 @@ AVRCharacter::AVRCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CurrentTime = 0.f;
-	xCord = 0.f;
-
+	
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(GetRootComponent());
 
 	SpawnComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	SpawnComp->SetupAttachment(GetRootComponent());
-
-	
-	
-	
-
-
 }
 
 // Called when the game starts or when spawned
@@ -73,9 +61,6 @@ void AVRCharacter::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firing!!!!"));
 
-
-	
-
 	//create spawn params;
 	FActorSpawnParameters SpawnParams;
 
@@ -87,10 +72,7 @@ void AVRCharacter::Fire()
 	OurLoc = camera->GetComponentLocation();
 	
 	//Spawn our object
-	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ourSpawningObject, OurLoc, camera->GetComponentRotation(), SpawnParams);
-	
-	FVector NewVelocity = GetActorForwardVector() * 5000.f;
-	Projectile->Velocity = FVector();
+	AProjectile* Lazer = GetWorld()->SpawnActor<AProjectile>(Projectile, OurLoc, camera->GetComponentRotation(), SpawnParams);
 
 	}
 

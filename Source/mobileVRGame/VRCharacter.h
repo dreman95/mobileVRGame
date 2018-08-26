@@ -49,14 +49,13 @@ private:
 	class UStaticMeshComponent* SpawnComp;
 
 	float CurrentTime;                              //Keeps current alive time 
-	float xCord;                                    //Holds the new x cordinate 
 
 	FVector OurLoc;                                 //Holds our spawn location
 	FRotator ourRotation;                           //Holds the rotation of the object 
 	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Our spawning object")
-	TSubclassOf<AProjectile> ourSpawningObject;	//Holds the blueprint of the object we want to spawn 		
+	TSubclassOf<AProjectile> Projectile;	//Holds the blueprint of the object we want to spawn 		
 
 
 };
