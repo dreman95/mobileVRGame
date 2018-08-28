@@ -4,6 +4,7 @@
 #include <Camera/CameraComponent.h>
 #include <GameFramework/Actor.h>
 #include <Components/StaticMeshComponent.h>
+#include <GameFramework/ForceFeedbackEffect.h>
 
 // Sets default values
 AVRCharacter::AVRCharacter()

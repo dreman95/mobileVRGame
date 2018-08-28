@@ -34,13 +34,13 @@ AProjectile::AProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->SetUpdatedComponent(CollisionComp);
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->InitialSpeed = 5000.f;
+	ProjectileMovement->MaxSpeed = 10000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
 	// Die after 3 seconds by default
-	//InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 3.0f;
 
 	/*==============================================================================================================
 	================================================================================================================*/
