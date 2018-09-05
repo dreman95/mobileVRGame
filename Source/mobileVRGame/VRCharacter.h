@@ -28,6 +28,7 @@ public:
 private:
 	void MoveRight(float throttle);
 	void MoveForward(float throttle);
+  void Raycast();
 
 private:
 	//store a reference to the camera

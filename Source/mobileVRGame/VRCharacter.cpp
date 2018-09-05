@@ -2,6 +2,9 @@
 
 #include "VRCharacter.h"
 #include <Camera/CameraComponent.h>
+#include "Engine.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/Engine.h"
 
 
 // Sets default values
@@ -36,6 +39,10 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Right"), this, &AVRCharacter::MoveRight);
 
+  PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AVRCharacter::Raycast);
+  PlayerInputComponent->BindAction("Raycast", IE_Pressed, this, &AVRCharacter::Raycast);
+
+
 }
 
 void AVRCharacter::MoveRight(float throttle)
@@ -48,3 +55,26 @@ void AVRCharacter::MoveForward(float throttle)
 	AddMovementInput(throttle * camera->GetForwardVector());
 }
 
+void AVRCharacter::Raycast()
+{
+  FHitResult HitResult;
+  //FHitResult* HitResult = new FHitResult();
+  FVector StartTrace = camera->GetComponentLocation();
+  FVector ForwardVector = camera->GetForwardVector();
+  FVector EndTrace = (ForwardVector * 5000.f) + StartTrace;
+  FCollisionQueryParams CQP;
+
+  if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, CQP))
+  {
+
+    DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), true, -10.f);
+
+    if (HitResult.GetActor() != NULL)
+    {
+      //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *HitResult.GetActor()->GetHumanReadableName() ));
+      GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *HitResult.GetActor()->GetName()));
+      //HitResult.GetActor()->GetHumanReadableName()
+      HitResult.GetActor()->Destroy();
+    }
+  }
+}

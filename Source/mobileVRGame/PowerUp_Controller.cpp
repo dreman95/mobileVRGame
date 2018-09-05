@@ -24,7 +24,7 @@ APowerUp_Controller::APowerUp_Controller()
 void APowerUp_Controller::BeginPlay()
 {
 	Super::BeginPlay();
-  GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("We are alive"));
+  //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("We are alive"));
 }
 
 // Called every frame
@@ -38,7 +38,7 @@ void APowerUp_Controller::Tick(float DeltaTime)
   FString ourString = FString::SanitizeFloat(currentTime);
 
   // printing the debug message to the game world 
-  GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Our Current Time: ") + ourString);
+  //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Our Current Time: ") + ourString);
 
   // if the current time is greater or equal to 2, then do the following...
   if (currentTime >= 2.f)
