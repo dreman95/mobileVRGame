@@ -4,15 +4,12 @@
 #include <Camera/CameraComponent.h>
 #include <GameFramework/Actor.h>
 #include <Components/StaticMeshComponent.h>
-#include <GameFramework/ForceFeedbackEffect.h>
 
 // Sets default values
 AVRCharacter::AVRCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	CurrentTime = 0.f;
 	
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(GetRootComponent());
@@ -32,10 +29,6 @@ void AVRCharacter::BeginPlay()
 void AVRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//keep track of our current time 
-	CurrentTime = CurrentTime + 1 * DeltaTime;
-
 }
 
 // Called to bind functionality to input
@@ -60,8 +53,6 @@ void AVRCharacter::MoveForward(float throttle)
 
 void AVRCharacter::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Firing!!!!"));
-
 	//create spawn params;
 	FActorSpawnParameters SpawnParams;
 
@@ -75,5 +66,5 @@ void AVRCharacter::Fire()
 	//Spawn our object
 	AProjectile* Lazer = GetWorld()->SpawnActor<AProjectile>(Projectile, SpawnComp->GetSocketLocation(FName("ProjectileSocket")), SpawnComp->GetSocketRotation(FName("ProjectileSocket")), SpawnParams);
 
-	}
+}
 
