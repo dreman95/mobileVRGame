@@ -58,11 +58,14 @@ void AScenery_Controller::addTowers()
     if(i==0) i++;
     for (int j = -10; j < 10; j++)
     {
-      if(j==0) j++;
-      int h = FMath::Abs (FMath::RandRange(-6, 6) + FMath::RandRange(-6, 6)) / 2;
+      if(j==0 || i==0) continue;
+
+      int offX = FMath::RandRange(-50, 50);
+      int offY = FMath::RandRange(-50, 50);
+      int h = FMath::Abs (FMath::RandRange(-3, 3) + FMath::RandRange(-3, 3)) / 2;
       for (size_t k = 0; k < h; k++)
       {
-        FVector location = FVector(i * 400., j * 400., 100 + k * 200.);
+        FVector location = FVector(offX + i * 200., offY + j * 200., 100 + k * 200.);
         //location = FVector(0., 0., 100.);
         addTower(spawnParams, location);
       }
