@@ -75,7 +75,9 @@ void AScenery_Controller::addTowers()
 
 void AScenery_Controller::addTower(FActorSpawnParameters spawnParams, FVector location)
 {
-  AScenery_Parent* ourNewObject = GetWorld()->SpawnActor<AScenery_Parent>(ourSpawningObject, location, FRotator::ZeroRotator, spawnParams);
+  //FRotator rotator = FRotator::ZeroRotator;
+  FRotator rotator = FRotator(0., FMath::RandRange(0.f, 90.f), 0.);
+  AScenery_Parent* ourNewObject = GetWorld()->SpawnActor<AScenery_Parent>(ourSpawningObject, location, rotator, spawnParams);
 }
 
 // Called every frame
